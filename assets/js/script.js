@@ -6,6 +6,7 @@ const oneCallBaseUrl = "https://api.openweathermap.org/data/2.5/onecall"
 const apiKey = "e8139ecc4a08593710c9d15bc25fe6a5";
 
 var cityList = [];
+var cityListButtonElements;
 
 //#region localStorageHandling
 function getLocalStorage() {
@@ -47,6 +48,7 @@ function updateCityList(city) {
 //returns the API response, after taking in a city name.
 async function getCoordsFromCity(cityName) {
     //this works much more intuitively for me than the fetch .then() method taught in class
+    console.log(cityName);
     var weatherResponse = await fetch(weatherBaseUrl + "?q=" + cityName + "&appid=" + apiKey);
     var weatherData = await weatherResponse.json();
         
@@ -68,10 +70,53 @@ async function getFullWeatherReport(lat, lon, name) {
 }
 //#endregion API-functions
 
+//#region jquery-appends
+function removeListButtons() {
+
+}
+
+function addListButtons() {
+    if (cityListButtonElements != null) {
+        removeListButtons();
+    }
+
+    var containerEl = $("#cityButtonContainer");
+    var buttonDivEl = $(`<div class="container-fluid"></div>`);
+    for (var i = 0; i < cityList.length; i++) {
+        var buttonEl = $(`
+            <div class="row">
+                <button class="previousSearch btn btn-primary">${cityList[i]}</button>
+            </div>
+            <br>
+            `);
+        buttonDivEl.append(buttonEl);
+    }
+
+    containerEl.append(buttonDivEl);
+    cityListButtonElements = containerEl;
+}
+//#endregion jquery-appends
+
+function generateWeatherReport(cityName) {
+    getCoordsFromCity(cityName);
+}
+
+searchBtn.click(function() {
+    var inputText = searchInput.val();
+    console.log(inputText);
+    if (inputText != "") {
+        updateCityList(inputText);
+        addListButtons();
+        generateWeatherReport(inputText);
+    }
+})
+
 function init() {
     getLocalStorage();
 
-    var temp = getCoordsFromCity(cityList[0]);
+    addListButtons();
+
+    //var temp = getCoordsFromCity(cityList[0]);
 }
 
 init();
