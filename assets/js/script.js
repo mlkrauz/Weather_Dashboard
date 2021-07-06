@@ -49,7 +49,7 @@ function updateCityList(city) {
 async function getCoordsFromCity(cityName) {
     //this works much more intuitively for me than the fetch .then() method taught in class
     console.log(cityName);
-    var weatherResponse = await fetch(weatherBaseUrl + "?q=" + cityName + "&appid=" + apiKey);
+    var weatherResponse = await fetch(weatherBaseUrl + "?q=" + cityName + "&units=imperial&appid=" + apiKey);
     var weatherData = await weatherResponse.json();
         
     var lat, lon, name;
@@ -61,9 +61,9 @@ async function getCoordsFromCity(cityName) {
     getFullWeatherReport(lat, lon, name);
 }
 
-//returns the API reponse, after taking in latitude and longitude coords
+//taking in latitude and longitude coords, gets data for full weather report
 async function getFullWeatherReport(lat, lon, name) {
-    var weatherResponse = await fetch(oneCallBaseUrl + "?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&appid=" + apiKey);
+    var weatherResponse = await fetch(oneCallBaseUrl + "?units=imperial&lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&appid=" + apiKey);
     var weatherData = await weatherResponse.json();
 
     console.log(weatherData);
@@ -89,10 +89,14 @@ function addListButtons() {
     cityListButtonElements = containerEl;
 
     $(".previousSearch").on("click", function(event) {
-        //event.stopPropagation();
+        event.stopPropagation();
         var sender = event.target;
         generateWeatherReport(sender.textContent);
     })
+}
+
+function displayWeather(currentWeatherObj, fiveDayForecastArray) {
+
 }
 //#endregion jquery-appends
 
