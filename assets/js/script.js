@@ -7,8 +7,11 @@ const apiKey = "e8139ecc4a08593710c9d15bc25fe6a5";
 
 var cityList = [];
 var cityListButtonElements;
+var todaysWeatherElements;
+var fiveDayForecastElements;
 
 //#region localStorageHandling
+//---------------------------------------
 function getLocalStorage() {
     var localStorageCityList = JSON.parse(localStorage.getItem("cityList"));
 
@@ -24,9 +27,12 @@ function getLocalStorage() {
 function setLocalStorage() {
     localStorage.setItem("cityList", JSON.stringify(cityList));
 }
+//---------------------------------------
 //#endregion localStorageHandling
 
+
 //#region cityList_Manipulation
+//---------------------------------------
 function defaultCityList() {
     updateCityList("Detroit");
 }
@@ -47,9 +53,12 @@ function updateCityList(city) {
 
     setLocalStorage();
 }
+//---------------------------------------
 //#endregion cityList_Manipulation
 
+
 //#region API-functions
+//---------------------------------------
 //returns the API response, after taking in a city name.
 async function getCoordsFromCity(cityName) {
     //this works much more intuitively for me than the fetch .then() method taught in class
@@ -70,8 +79,12 @@ async function getFullWeatherReport(lat, lon, name) {
     var weatherResponse = await fetch(oneCallBaseUrl + "?units=imperial&lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&appid=" + apiKey);
     var theWeatherData = await weatherResponse.json();
 
+    //use moment to handle dates effectively
+    var currentDate = moment();
+
     var todaysWeatherObj = new weatherData(
         name,
+        currentDate.format("L"),
         theWeatherData.current.weather[0].description,
         theWeatherData.current.temp,
         theWeatherData.current.wind_speed,
@@ -80,10 +93,14 @@ async function getFullWeatherReport(lat, lon, name) {
         theWeatherData.current.weather[0].icon
     )
 
-    var fiveDayForecast = [5];
+    var fiveDayForecast = [null, null, null, null, null];
     for (var i = 0; i < fiveDayForecast.length; i++) {
+        //moment.js mutability will always screw me up.
+        var forecastDate = currentDate.add(1,'days');
+
         fiveDayForecast[i] = new weatherData(
             name,
+            forecastDate.format("L"),
             theWeatherData.daily[i].weather[0].description,
             theWeatherData.daily[i].temp,
             theWeatherData.daily[i].wind_speed,
@@ -96,16 +113,24 @@ async function getFullWeatherReport(lat, lon, name) {
     displayWeather(todaysWeatherObj, fiveDayForecast);
 
 }
+//---------------------------------------
 //#endregion API-functions
 
-//#region jquery-appends
-
+//#region jquery-removes
+//---------------------------------------
 function removeListButtons() {
     if (cityListButtonElements != null) {
         cityListButtonElements.remove();
     }
 }
 
+
+//---------------------------------------
+//#endregion jquery-removes
+
+
+//#region jquery-appends
+//---------------------------------------
 function addListButtons() {
     
     
@@ -135,9 +160,12 @@ function addListButtons() {
 }
 
 function displayWeather(currentWeatherObj, fiveDayForecastArray) {
-    //console.log(currentWeatherObj, fiveDayForecastArray);
+    console.log(currentWeatherObj, fiveDayForecastArray);
 }
+//---------------------------------------
 //#endregion jquery-appends
+
+
 
 function generateWeatherReport(cityName) {
     getCoordsFromCity(cityName);

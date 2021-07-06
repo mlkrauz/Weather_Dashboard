@@ -1,7 +1,8 @@
 //class for handling weather data
 class weatherData {
-    constructor(name, weatherDesc, temperature, windSpeed, humidity, uvi, iconString) {
+    constructor(name, date, weatherDesc, temperature, windSpeed, humidity, uvi, iconString) {
         this.name = name;
+        this.date = date;
         this.weatherDesc = weatherDesc;
         this.temperature = temperature;
         this.windSpeed = windSpeed;
