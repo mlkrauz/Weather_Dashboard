@@ -71,15 +71,8 @@ async function getFullWeatherReport(lat, lon, name) {
 //#endregion API-functions
 
 //#region jquery-appends
-function removeListButtons() {
-
-}
 
 function addListButtons() {
-    if (cityListButtonElements != null) {
-        removeListButtons();
-    }
-
     var containerEl = $("#cityButtonContainer");
     var buttonDivEl = $(`<div class="container-fluid"></div>`);
     for (var i = 0; i < cityList.length; i++) {
@@ -94,6 +87,12 @@ function addListButtons() {
 
     containerEl.append(buttonDivEl);
     cityListButtonElements = containerEl;
+
+    $(".previousSearch").on("click", function(event) {
+        //event.stopPropagation();
+        var sender = event.target;
+        generateWeatherReport(sender.textContent);
+    })
 }
 //#endregion jquery-appends
 
