@@ -5,17 +5,68 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link
             rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+        <link 
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"/>
         <link 
             rel="stylesheet" 
             href="./assets/css/style.css"/>
     </head>
     <body>
         <header>
-
+            <div class="jumbotron text-center">
+                <h1>WEATHER DASHBOARD</h1>
+            </div>
         </header>
 
+        <div class="container-fluid">
+            <!-- Main content -->
+            <div class="row">
 
+                <!-- Sidebar/searchbar -->
+                <div class="col-sm-3">
+                    <div class="well">
+                        <h2 class="text-center">Search for a City:</h2>
+                        <form>
+                            <input type="city" class="form-control">
+                            <button type="submit" class="form-control">Submit</button>
+                        </form>
+                        <hr>
+                        <!-- JS Appended buttons -->
+                    </div>
+                </div>
+
+                <!-- Weather content -->
+                <div class="col-sm-9">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4>Today's Weather</h3>
+                        </div>
+                        <div class="panel-content">
+
+                        </div>
+                        <div class="panel-footer"></div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4>5-Day Forecast</h3>
+                        </div>
+                        <div class="panel-content">
+
+                        </div>
+                        <div class="panel-footer"></div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- Footer -->
+            <div class="footer text-center">
+                <p>Made by Mark Krauzowicz</p>
+            </div>
+        </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     </body>
