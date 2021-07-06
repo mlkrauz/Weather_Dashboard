@@ -32,6 +32,11 @@ function defaultCityList() {
 }
 
 function updateCityList(city) {
+    //if the list already contains this city, do nothing!
+    if (cityList.find(x => x == city) != null) {
+        return;
+    }
+    
     //add new item
     cityList.unshift(city);
 
@@ -48,15 +53,14 @@ function updateCityList(city) {
 //returns the API response, after taking in a city name.
 async function getCoordsFromCity(cityName) {
     //this works much more intuitively for me than the fetch .then() method taught in class
-    console.log(cityName);
     var weatherResponse = await fetch(weatherBaseUrl + "?q=" + cityName + "&units=imperial&appid=" + apiKey);
-    var weatherData = await weatherResponse.json();
+    var theWeatherData = await weatherResponse.json();
         
     var lat, lon, name;
     
-    lat = weatherData.coord.lat;
-    lon = weatherData.coord.lon;
-    name = weatherData.Name;
+    lat = theWeatherData.coord.lat;
+    lon = theWeatherData.coord.lon;
+    name = theWeatherData.name;
     
     getFullWeatherReport(lat, lon, name);
 }
@@ -64,15 +68,47 @@ async function getCoordsFromCity(cityName) {
 //taking in latitude and longitude coords, gets data for full weather report
 async function getFullWeatherReport(lat, lon, name) {
     var weatherResponse = await fetch(oneCallBaseUrl + "?units=imperial&lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&appid=" + apiKey);
-    var weatherData = await weatherResponse.json();
+    var theWeatherData = await weatherResponse.json();
 
-    console.log(weatherData);
+    var todaysWeatherObj = new weatherData(
+        name,
+        theWeatherData.current.weather[0].description,
+        theWeatherData.current.temp,
+        theWeatherData.current.wind_speed,
+        theWeatherData.current.humidity,
+        theWeatherData.current.uvi,
+        theWeatherData.current.weather[0].icon
+    )
+
+    var fiveDayForecast = [5];
+    for (var i = 0; i < fiveDayForecast.length; i++) {
+        fiveDayForecast[i] = new weatherData(
+            name,
+            theWeatherData.daily[i].weather[0].description,
+            theWeatherData.daily[i].temp,
+            theWeatherData.daily[i].wind_speed,
+            theWeatherData.daily[i].humidity,
+            theWeatherData.daily[i].uvi,
+            theWeatherData.daily[i].weather[0].icon
+        )
+    }
+
+    displayWeather(todaysWeatherObj, fiveDayForecast);
+
 }
 //#endregion API-functions
 
 //#region jquery-appends
 
+function removeListButtons() {
+    if (cityListButtonElements != null) {
+        cityListButtonElements.remove();
+    }
+}
+
 function addListButtons() {
+    
+    
     var containerEl = $("#cityButtonContainer");
     var buttonDivEl = $(`<div class="container-fluid"></div>`);
     for (var i = 0; i < cityList.length; i++) {
@@ -86,17 +122,20 @@ function addListButtons() {
     }
 
     containerEl.append(buttonDivEl);
-    cityListButtonElements = containerEl;
 
     $(".previousSearch").on("click", function(event) {
         event.stopPropagation();
+        event.preventDefault();
         var sender = event.target;
         generateWeatherReport(sender.textContent);
     })
+
+    removeListButtons();
+    cityListButtonElements = buttonDivEl;
 }
 
 function displayWeather(currentWeatherObj, fiveDayForecastArray) {
-
+    //console.log(currentWeatherObj, fiveDayForecastArray);
 }
 //#endregion jquery-appends
 
@@ -104,9 +143,9 @@ function generateWeatherReport(cityName) {
     getCoordsFromCity(cityName);
 }
 
-searchBtn.click(function() {
+searchBtn.click(function(event) {
+    event.preventDefault();
     var inputText = searchInput.val();
-    console.log(inputText);
     if (inputText != "") {
         updateCityList(inputText);
         addListButtons();
