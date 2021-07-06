@@ -1,5 +1,8 @@
 const searchInput = $("#searchInput");
 const searchBtn = $("#searchBtn");
+
+const weatherBaseUrl = "https://api.openweathermap.org/data/2.5/weather";
+const oneCallBaseUrl = "https://api.openweathermap.org/data/2.5/onecall"
 const apiKey = "e8139ecc4a08593710c9d15bc25fe6a5";
 
 var cityList = [];
@@ -24,7 +27,7 @@ function setLocalStorage() {
 
 //#region cityList_Manipulation
 function defaultCityList() {
-    cityList.unshift("Detroit, MI");
+    updateCityList("Detroit");
 }
 
 function updateCityList(city) {
@@ -40,8 +43,35 @@ function updateCityList(city) {
 }
 //#endregion cityList_Manipulation
 
+//#region API-functions
+//returns the API response, after taking in a city name.
+async function getCoordsFromCity(cityName) {
+    //this works much more intuitively for me than the fetch .then() method taught in class
+    var weatherResponse = await fetch(weatherBaseUrl + "?q=" + cityName + "&appid=" + apiKey);
+    var weatherData = await weatherResponse.json();
+        
+    var lat, lon, name;
+    
+    lat = weatherData.coord.lat;
+    lon = weatherData.coord.lon;
+    name = weatherData.Name;
+    
+    getFullWeatherReport(lat, lon, name);
+}
+
+//returns the API reponse, after taking in latitude and longitude coords
+async function getFullWeatherReport(lat, lon, name) {
+    var weatherResponse = await fetch(oneCallBaseUrl + "?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&appid=" + apiKey);
+    var weatherData = await weatherResponse.json();
+
+    console.log(weatherData);
+}
+//#endregion API-functions
+
 function init() {
     getLocalStorage();
+
+    var temp = getCoordsFromCity(cityList[0]);
 }
 
 init();
