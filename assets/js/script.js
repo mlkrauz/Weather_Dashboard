@@ -124,6 +124,14 @@ function removeListButtons() {
     }
 }
 
+function removePreviousWeather() {
+    if (todaysWeatherElements != null) {
+        todaysWeatherElements.remove();
+    }
+    if (fiveDayForecastElements != null) {
+        fiveDayForecastElements.remove();
+    }
+}
 
 //---------------------------------------
 //#endregion jquery-removes
@@ -132,7 +140,6 @@ function removeListButtons() {
 //#region jquery-appends
 //---------------------------------------
 function addListButtons() {
-    
     
     var containerEl = $("#cityButtonContainer");
     var buttonDivEl = $(`<div class="container-fluid"></div>`);
@@ -161,6 +168,53 @@ function addListButtons() {
 
 function displayWeather(currentWeatherObj, fiveDayForecastArray) {
     console.log(currentWeatherObj, fiveDayForecastArray);
+
+    //Today's forecast
+    var todaysWeatherDiv = $(`<div class="container-fluid"></div>`);
+    var title = $(`<h3>${currentWeatherObj.name + " | " + currentWeatherObj.date}</h3>`);
+    var weatherIcon = $(`<img alt="Today's weather" src="${currentWeatherObj.iconUrl()}"></img>`);
+    var weatherStats = $(`<p>
+        <b>${currentWeatherObj.weatherDesc}</b><br>
+        Temp: ${currentWeatherObj.temperature}°F<br>
+        Wind Speed: ${currentWeatherObj.windSpeed}MPH<br>
+        Humidity: ${currentWeatherObj.humidity}%<br>
+        UV Index: ${currentWeatherObj.uvi}<br>
+    </p>`);
+
+    //append today's forecast
+    todaysWeatherDiv.append(title);
+    todaysWeatherDiv.append(weatherIcon);
+    todaysWeatherDiv.append(weatherStats);
+    $("#dailyContainer").append(todaysWeatherDiv);
+
+    //5-day forecast
+    var fiveDayForecastDiv = $(`<div class="container-fluid"></div>`);
+    for (var i = 0; i < fiveDayForecastArray.length; i++) {
+        var currentDay = fiveDayForecastArray[i];
+
+        var dayContainer = $(`<div class="card"></div>`);
+        var title = $(`<h3 class="card-title">${currentDay.date}</h3>`);
+        var weatherIcon = $(`<img alt="Future weather" src="${currentDay.iconUrl()}"></img>`);
+        var weatherStats = $(`<p class="card-text">
+            <b>${currentDay.weatherDesc}</b><br>
+            Temp: ${currentDay.temperature.day}°F<br>
+            Wind Speed: ${currentDay.windSpeed}MPH<br>
+            Humidity: ${currentDay.humidity}%<br>
+            UV Index: ${currentDay.uvi}<br>
+        </p>`);
+
+        dayContainer.append(title);
+        dayContainer.append(weatherIcon);
+        dayContainer.append(weatherStats);
+        fiveDayForecastDiv.append(dayContainer);
+    }
+
+    $("#fiveDayContainer").append(fiveDayForecastDiv);
+
+    //remove old weather reports, assign current reports
+    removePreviousWeather();
+    todaysWeatherElements = todaysWeatherDiv;
+    fiveDayForecastElements = fiveDayForecastDiv;
 }
 //---------------------------------------
 //#endregion jquery-appends

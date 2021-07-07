@@ -11,7 +11,7 @@ class weatherData {
         this.iconString = iconString;
     }
 
-    iconURl(multiplier) {
+    iconUrl(multiplier) {
         const iconURLBase = "http://openweathermap.org/img/w/";
         var sizingMultiplierText = "";
         if (!isNaN(multiplier) && Math.floor(multiplier) === multiplier) {
