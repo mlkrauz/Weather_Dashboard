@@ -188,25 +188,39 @@ function displayWeather(currentWeatherObj, fiveDayForecastArray) {
     $("#dailyContainer").append(todaysWeatherDiv);
 
     //5-day forecast
-    var fiveDayForecastDiv = $(`<div class="container-fluid"></div>`);
+    var fiveDayForecastDiv = $(`<br>
+        <div class="container-fluid">
+            <div class="row">
+                
+            </div>
+        </div>
+    `);
     for (var i = 0; i < fiveDayForecastArray.length; i++) {
         var currentDay = fiveDayForecastArray[i];
 
-        var dayContainer = $(`<div class="card"></div>`);
-        var title = $(`<h3 class="card-title">${currentDay.date}</h3>`);
-        var weatherIcon = $(`<img alt="Future weather" src="${currentDay.iconUrl()}"></img>`);
-        var weatherStats = $(`<p class="card-text">
-            <b>${currentDay.weatherDesc}</b><br>
-            Temp: ${currentDay.temperature.day}°F<br>
-            Wind Speed: ${currentDay.windSpeed}MPH<br>
-            Humidity: ${currentDay.humidity}%<br>
-            UV Index: ${currentDay.uvi}<br>
-        </p>`);
+        var dayContainer = $(`
+        <div class="col-sm-2">
+            <div class="panel panel-info text-center"></div>
+        </div>
+        `);
+        var title = $(`<div class="panel-heading"><h4>${currentDay.date}</h4></div`);
+        var weatherStats = $(`
+        <div class="panel-content">
+            <img alt="Future weather" src="${currentDay.iconUrl()}"></img>
+            <p>
+                <b>${currentDay.weatherDesc}</b><br>
+                Temp: ${currentDay.temperature.day}°F<br>
+                Wind Speed: ${currentDay.windSpeed}MPH<br>
+                Humidity: ${currentDay.humidity}%<br>
+                UV Index: ${currentDay.uvi}<br>
+            </p>
+        </div>    
+        `);
 
-        dayContainer.append(title);
-        dayContainer.append(weatherIcon);
-        dayContainer.append(weatherStats);
-        fiveDayForecastDiv.append(dayContainer);
+        dayContainer.children().first().append(title);
+        //dayContainer.first().append(weatherIcon);
+        dayContainer.children().first().append(weatherStats);
+        fiveDayForecastDiv.children().first().append(dayContainer);
     }
 
     $("#fiveDayContainer").append(fiveDayForecastDiv);
@@ -239,6 +253,8 @@ function init() {
     getLocalStorage();
 
     addListButtons();
+
+    generateWeatherReport(cityList[0]);
 
     //var temp = getCoordsFromCity(cityList[0]);
 }
