@@ -167,8 +167,17 @@ function addListButtons() {
 }
 
 function displayWeather(currentWeatherObj, fiveDayForecastArray) {
-    console.log(currentWeatherObj, fiveDayForecastArray);
 
+    //set the color we want surrounding the UVI
+    var uvColorStyle;
+    if (currentWeatherObj.uvi <= 3.0) {
+        uvColorStyle = `<span class="label label-success">`
+    } else if (currentWeatherObj.uvi > 3.0 && currentWeatherObj.uvi <= 7.0) {
+        uvColorStyle = `<span class="label label-warning">`
+    } else {
+        uvColorStyle = `<span class="label label-danger">`
+    }
+    
     //Today's forecast
     var todaysWeatherDiv = $(`<div class="container-fluid"></div>`);
     var title = $(`<h3>${currentWeatherObj.name + " | " + currentWeatherObj.date}</h3>`);
@@ -178,7 +187,7 @@ function displayWeather(currentWeatherObj, fiveDayForecastArray) {
         Temp: ${currentWeatherObj.temperature}°F<br>
         Wind Speed: ${currentWeatherObj.windSpeed}MPH<br>
         Humidity: ${currentWeatherObj.humidity}%<br>
-        UV Index: ${currentWeatherObj.uvi}<br>
+        UV Index: ${uvColorStyle}${currentWeatherObj.uvi}</span><br>
     </p>`);
 
     //append today's forecast
@@ -198,6 +207,16 @@ function displayWeather(currentWeatherObj, fiveDayForecastArray) {
     for (var i = 0; i < fiveDayForecastArray.length; i++) {
         var currentDay = fiveDayForecastArray[i];
 
+        //set the color we want surrounding the UVI
+        var uvColorStyle;
+        if (currentDay.uvi <= 3.0) {
+            uvColorStyle = `<span class="label label-success">`
+        } else if (currentDay.uvi > 3.0 && currentDay.uvi <= 7.0) {
+            uvColorStyle = `<span class="label label-warning">`
+        } else {
+            uvColorStyle = `<span class="label label-danger">`
+        }
+
         var dayContainer = $(`
         <div class="col-sm-2">
             <div class="panel panel-info text-center"></div>
@@ -212,7 +231,7 @@ function displayWeather(currentWeatherObj, fiveDayForecastArray) {
                 Temp: ${currentDay.temperature.day}°F<br>
                 Wind Speed: ${currentDay.windSpeed}MPH<br>
                 Humidity: ${currentDay.humidity}%<br>
-                UV Index: ${currentDay.uvi}<br>
+                UV Index: ${uvColorStyle}${currentDay.uvi}</span><br>
             </p>
         </div>    
         `);
